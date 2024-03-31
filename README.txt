@@ -3,24 +3,25 @@ diseñada para obtener datos de una API externa e insertarlos en una base de dat
 Específicamente, recupera datos de acciones de la API de Alpha Vantage e inserta estos datos en una tabla Redshift llamada stock_data.
 
 Requisitos Previos:
-1. Python 3.x instalado.
-2. Paquetes de Python necesarios: pandas, requests, psycopg2, python-dotenv
-3. Acceso a una clave de API de Alpha Vantage (https://www.alphavantage.co/support/)
+1. Docker instalado en tu sistema. Puedes descargarlo desde https://docs.docker.com/engine/install/
+2. Acceso a una clave de API de Alpha Vantage (https://www.alphavantage.co/support/)
 4. Acceso a un clúster Amazon Redshift.
 5. Credenciales y detalles de configuración de la base de datos necesarios (host, puerto, nombre de la base de datos, nombre de usuario, contraseña).
 
-Instalación:
-1. Clona o descarga el repositorio que contiene el script.
-2. Asegúrate de que todos los paquetes de Python requeridos estén instalados. Puedes instalarlos usando: 
-    "pip install -r requirements.txt"
-    Esto instalará todas las bibliotecas listadas en el archivo requirements.txt
-4. Configura los detalles de conexión para tu clúster Amazon Redshift y API de Alpha Vantage en
-   el archivo .env_example, despues renombra el archivo dejandolo como ".env"
+Configuración:
+1. Clona o descarga el repositorio en tu maquina local.
+2. Asegúrate de tener un archivo .env en el directorio raíz del repositorio. Este archivo debe contener las variables de entorno necesarias para la ejecución del script, 
+    como: API_KEY (clave de API de Alpha Vantage), HOST, PORT, DBNAME, USER, PASSWORD.
 
-Uso:
-1. Ejecuta el script Python main.py
-2. El script recuperará los datos de acciones más recientes para el símbolo especificado (en este caso, "AMZN") de la API de Alpha Vantage.
-3. Si se recuperan datos correctamente, se va a verificar primero si existe la tabla "stock_data" de tu base de datos Redshift, en caso que no exista se crea. 
-3. Despues intentará insertar los datos en la tabla stock_data.
-4. Si los datos ya están presentes en la base de datos para la misma fecha y símbolo, no se insertarán nuevamente.
-5. El script imprimirá un mensaje indicando si los datos se cargaron correctamente en Redshift o si no se encontraron datos para el símbolo especificado.
+Ejecución del script con Docker:
+1. Abre una terminal y navega hasta el directorio raíz del repositorio clonado.
+
+2. Construye la imagen Docker ejecutando el siguiente comando: "docker build -t nombre_imagen ."
+    Reemplaza "nombre_imagen" con el nombre que desees darle a tu imagen.
+
+3. Una vez que la imagen se haya construido correctamente, puedes ejecutar el contenedor con el siguiente comando: "docker run --env-file .env nombre_imagen"
+    Esto iniciará el script dentro del contenedor Docker, utilizando las variables de entorno especificadas en el archivo .env.
+
+4. El script obtendrá y limpiará los datos de las acciones de la API de Alpha Vantage y los cargará en la base de datos Redshift según la configuración proporcionada en el archivo .env.
+
+
